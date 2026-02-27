@@ -10,7 +10,7 @@ public class BurningCellManager : MonoBehaviour
     public GridManager gridManager;
     public GameObject burningCellPrefab;
 
-    IgnitionProbabilityGenerator igniteProbGen;
+    public IgnitionProbabilityGenerator igniteProbGen;
     public void InitializeManager()
     {
         igniteProbGen = new IgnitionProbabilityGenerator(gridManager.GetCellSize());
@@ -57,13 +57,13 @@ public class BurningCellManager : MonoBehaviour
             {
                 int gridLength = gridManager.GetGridLength();
                 int gridWidth = gridManager.GetGridWidth();
-                
+
                 if(x<0 || z<0 || x>gridWidth-1 || z > gridLength - 1)
                 {
-                    //If edge case, continue to next iteration
+                    //If edge case (OOB), continue to next iteration
                     continue;
                 }
-
+                //If not out of bounds, get the cell of interest
                 GridCell nextNeigh = gridManager.GetMapCell(x,z);
 
                 if (nextNeigh.isBurning || nextNeigh.isBurned)
@@ -111,5 +111,23 @@ public class BurningCellManager : MonoBehaviour
 
         burningCells.Add(ignitingCell);
     }
+
+    //  void BurnOutCell(int x, int z)
+    // {
+    //     grid[x,z].isBurning = false;
+    //     grid[x,z].isBurned = true;
+        
+    //     SetTerrainLayer(x,z,1);
+
+    //     GameObject cellVisual = gridVisuals[x,z];
+    //     if(cellVisual != null)
+    //     {
+    //         // Renderer renderer = cellVisual.GetComponent<Renderer>();
+    //         // renderer.material = burnedMaterial;
+
+    //         Destroy(gridVisuals[x,z]);
+    //         gridVisuals[x,z] = null;
+    //     }
+    // }
     
 }//END CLASS

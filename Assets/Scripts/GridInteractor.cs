@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class GridInteractor : MonoBehaviour
 {
     public GridManager gridManager;
+    //Needed so that if a cell is clicked, we can ignite it
     public BurningCellManager burnCellManager;
     float cellSize;
     public GameObject cursorHighlighter;
