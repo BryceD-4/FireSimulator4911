@@ -4,17 +4,21 @@ public class FireSimMain : MonoBehaviour
 {
     public GridManager gridManager;
     public GridInteractor gridInteractor;
-    // RotatingCamera rotateCamera;
+    public BurningCellManager burningCellManager;
+
     private int gridSize = 100;
     
     void Start()
     {
         gridManager.InitializeGrid(gridSize, gridSize);
-        gridInteractor.Start();
+        gridInteractor.InitializeInteractor(gridSize, gridSize);
+        burningCellManager.InitializeManager();
     }
 
     void Update()
     {
         gridInteractor.Update();
+        burningCellManager.UpdateBurningCells();
+
     }
 }

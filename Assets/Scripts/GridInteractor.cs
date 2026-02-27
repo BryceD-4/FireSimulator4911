@@ -5,10 +5,16 @@ using UnityEngine.InputSystem;
 public class GridInteractor : MonoBehaviour
 {
     public GridManager gridManager;
+    public BurningCellManager burnCellManager;
     float cellSize;
     public GameObject cursorHighlighter;
-    public void Start()
+
+    private int gridLength, gridWidth;
+    public void InitializeInteractor(int gridL, int gridW)
     {
+        gridLength = gridL;
+        gridWidth = gridW;
+
         cellSize = gridManager.GetCellSize();
         
         //Get the cursor highlighter the same size as the cells in the grid
@@ -18,6 +24,59 @@ public class GridInteractor : MonoBehaviour
     public void Update()
     {
         DetectMouseHoverCell();
+
+        if(Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            IgniteCellUnderMouse();
+        }
+    }
+
+    void IgniteCellUnderMouse()
+    {
+        //same as above, we get the ray to the point on the screen where the mouse is
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+
+        //In unity, we had to take the higlighter and in inspector, turn it from Layer: default to
+        //Layer: ignore raycast, so that when we click, it is not just hitting the highlighter object, 
+        // but rather the terrain below it (the next item down). 
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.GetComponent<Terrain>())
+            {
+                //As we did above, get the point of contact
+                Vector3 worldPos = hit.point;
+
+                //Get the x and z positions of this point
+                int xIndex = Mathf.FloorToInt(worldPos.x / cellSize);
+                int zIndex = Mathf.FloorToInt(worldPos.z / cellSize);
+
+                GridCell currentCell = gridManager.GetMapCell(xIndex, zIndex);
+                //If the cell is within the game grid
+                if (IsValidCell(xIndex, zIndex))
+                {
+                    //Only do this if the cell is not already burning
+                    if (!currentCell.isBurning)
+                    {
+                        //Set the cell to burning in the game grid
+                        currentCell.isBurning = true;
+
+                        Debug.Log("Cell CLicked = " + xIndex +", " + zIndex);
+                        //Make the visual representation of burning
+                        // SpawnBurningVisual(xIndex, zIndex);
+                        burnCellManager.IgniteCellVisually(xIndex, zIndex);
+                    }
+                }
+            }
+        }
+    }
+
+     bool IsValidCell(int x, int z)
+    {
+       //Make sure the cell is within the game grid
+       //Make sure is it within the parameters of the game grid
+        return x >= 0 && x < gridWidth &&
+            z >= 0 && z < gridLength;
     }
 
     void DetectMouseHoverCell()
@@ -64,9 +123,6 @@ public class GridInteractor : MonoBehaviour
                 cellWorldPosition.y = height + 0.1f;
                 //Place our cursor object overtop of this placement
                 cursorHighlighter.transform.position = cellWorldPosition;
-
-                // Debug.Log("Hovering over cell: " + xIndex + ", " + zIndex);
-                // Debug.Log("Cell Height = " + grid[xIndex, zIndex].elevation);
             }
         }
     }

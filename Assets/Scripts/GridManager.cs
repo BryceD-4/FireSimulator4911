@@ -4,14 +4,17 @@ public class GridManager : MonoBehaviour
 {
     //100 was chosen to reduce CPU load, as 150 and 200 were very slow
     private float terrainWidth, terrainLength;
+    private int gridWidth, gridLength;
     private float cellSize;
 
     private GridCell [,] mapGrid;
 
     private GameObject[,] gridVisuals;
 
-    public void InitializeGrid(int gridWidth, int gridLength)
+    public void InitializeGrid(int gridW, int gridL)
     {
+        gridWidth = gridW;
+        gridLength = gridL;
         //Calculate the size of the grid based off of the terrain size.
         //This gets our main terrain object, we only have one, so no issues with unpredictable behaviour
         Terrain mainTerrain = Terrain.activeTerrain;
@@ -20,7 +23,7 @@ public class GridManager : MonoBehaviour
         terrainLength = mainTerrain.terrainData.size.z;
         //Get the cell size from the grid and terrain dimensions
         //Our grid is always square, so can use width of length.
-       cellSize = terrainWidth/ gridWidth;
+        cellSize = terrainWidth/ gridWidth;
 
 
         //initialize the grids
@@ -42,6 +45,7 @@ public class GridManager : MonoBehaviour
         GridCell nextCell = new GridCell(x,z);
         //Initialize the grid cell itself
         mapGrid[x,z] = nextCell;
+
         //This is for the visual above the cell
         gridVisuals[x,z] = new GameObject();
 
@@ -81,6 +85,20 @@ public class GridManager : MonoBehaviour
     public float GetCellSize()
     {
         return cellSize;
+    }
+
+    public int GetGridWidth()
+    {
+        return gridWidth;
+    }
+    public int GetGridLength()
+    {
+        return gridLength;
+    }
+
+    public GameObject GetGridVisualCell(int x, int z)
+    {
+        return gridVisuals[x,z];
     }
 
     void Update()

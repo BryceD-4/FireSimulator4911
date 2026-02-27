@@ -6,7 +6,15 @@ public class GridCell
     public float elevation;
     public Fuel fuelLibrary;
     public float fuelLoad;
-    
+
+    public bool isBurning;
+    public bool isBurned;
+
+     //This is to make the cells burn out after a period of time
+    //timer = how long it has burned, duration = total burn time
+    public float maxBurnDuration = 5.0f;
+    public float burnTimer = 0f;
+
     public GridCell(int x, int z)
     {
         this.x = x;
@@ -52,12 +60,12 @@ public class GridCell
     //         }
     //     }
     // }
-    public int getCellX()
+    public int GetCellX()
     {
-        return this.x;
+        return x;
     }
-    public int getCellZ()
+    public int GetCellZ()
     {
-        return this.z;
+        return z;
     }
 }
