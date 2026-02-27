@@ -8,11 +8,6 @@ public class CompassCubeRotate : MonoBehaviour
     public Vector3 offset = new Vector3(0f, 14f, 30f);
     //This is the center of the terrain itself
     public Transform terrainCenter;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
      void LateUpdate()
