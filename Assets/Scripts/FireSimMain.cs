@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class FireSimMain : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public GridManager gridManager;
+    // RotatingCamera rotateCamera;
+    private int gridSize = 100;
+    
     void Start()
     {
-        
+        gridManager.InitializeGrid(gridSize, gridSize);
+        Debug.Log("Grid Made");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        // rotateCamera.Update();
+                Debug.Log("UPDATE**");
+
     }
 }

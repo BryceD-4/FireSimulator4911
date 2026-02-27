@@ -3,16 +3,14 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     //100 was chosen to reduce CPU load, as 150 and 200 were very slow
-    private static int gridWidth = 100;
-    private static int gridLength = gridWidth;
-    private static float terrainWidth, terrainLength;
-    public static float cellSize;
+    private float terrainWidth, terrainLength;
+    public float cellSize;
 
-    public static GridCell [,] mapGrid;
+    public GridCell [,] mapGrid;
 
-    public static GameObject[,] gridVisuals;
+    public GameObject[,] gridVisuals;
 
-    void Start()
+    public void InitializeGrid(int gridWidth, int gridLength)
     {
         //Calculate the size of the grid based off of the terrain size.
         //This gets our main terrain object, we only have one, so no issues with unpredictable behaviour
@@ -22,7 +20,7 @@ public class GridManager : MonoBehaviour
         terrainLength = mainTerrain.terrainData.size.z;
         //Get the cell size from the grid and terrain dimensions
         //Our grid is always square, so can use width of length.
-        cellSize = terrainWidth/ gridWidth;
+       cellSize = terrainWidth/ gridWidth;
 
         //initialize the grids
         mapGrid = new GridCell[gridWidth, gridLength];
@@ -36,9 +34,6 @@ public class GridManager : MonoBehaviour
                 PopulateGridCell(x,z);
             }
         }
-
-
-        
     }
 
     private void PopulateGridCell(int x, int z)
@@ -74,7 +69,10 @@ public class GridManager : MonoBehaviour
 
     }
 
-
+    public GridCell GetMapCell(int x, int z)
+    {
+        return mapGrid[x,z];
+    }
 
     void Update()
     {
