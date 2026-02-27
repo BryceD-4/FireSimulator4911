@@ -22,6 +22,7 @@ public class GridManager : MonoBehaviour
         //Our grid is always square, so can use width of length.
        cellSize = terrainWidth/ gridWidth;
 
+
         //initialize the grids
         mapGrid = new GridCell[gridWidth, gridLength];
         gridVisuals = new GameObject[gridWidth, gridLength];
@@ -53,6 +54,7 @@ public class GridManager : MonoBehaviour
             0, 
             z*cellSize + cellSize/2
         );
+
         //Set the elevation to the elvation on the map
         //This requires the use of a Vector3 object, so that is why we used it above. 
         //SampleHeight(Vector3 worldPosition)
@@ -78,7 +80,7 @@ public class GridManager : MonoBehaviour
 
     public float GetCellSize()
     {
-        return this.cellSize;
+        return cellSize;
     }
 
     void Update()
