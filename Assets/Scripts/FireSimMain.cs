@@ -22,7 +22,7 @@ public class FireSimMain : MonoBehaviour
         //WAIT UNTIL UI IS COMPLETE
         if (uI_Manager.UserInputReceived())
         {
-            gridInteractor.Update();
+            gridInteractor.UpdateInteractor();
             burningCellManager.UpdateBurningCells();
         }
         

@@ -22,7 +22,7 @@ public class GridInteractor : MonoBehaviour
         cursorHighlighter.transform.localScale = new Vector3(cellSize,cellSize,cellSize);
     }
 
-    public void Update()
+    public void UpdateInteractor()
     {
         DetectMouseHoverCell();
 

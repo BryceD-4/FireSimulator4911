@@ -8,6 +8,14 @@ public class IgnitionProbabilityGenerator
 
     private UserData rawUserValues;
 
+    private float windWeight = 0.2f; 
+    private float temperatureWeight = 0.02f; 
+    private float slopeWeight = 0.1f; 
+    private float fuelWeight = 0.2f;
+
+    //These factors are the same for all cells
+    private float temperatureFactor, humidityFactor;
+
     public IgnitionProbabilityGenerator(float cellSize)
     {
         this.cellSize = cellSize;
@@ -20,8 +28,12 @@ public class IgnitionProbabilityGenerator
     public void SetUserInput(UserData input)
     {
         rawUserValues = input;
-        Debug.Log("PROB USER. VAL TEMP = " + rawUserValues.temperature);
+        //Once we get the user values, we can calculate the temperature and humidity
+        //values, as these will be the same for all cells.
+        temperatureFactor = CalculateTemperatureFactor();
+        humidityFactor = CalculateHumidityFactor();
     }
+    
     public float GetIgnitionProbability(GridCell mainCell, GridCell neighbour)
     {
         float weightedProbabilities;
@@ -30,7 +42,36 @@ public class IgnitionProbabilityGenerator
         float slopeFactor; 
         float fuelFactor;
 
-        return 1;
+        windFactor = CalculateWindFactor(mainCell.GetCellX(), mainCell.GetCellZ(), neighbour.GetCellX(), neighbour.GetCellZ());
+        slopeFactor = CalculateSlopeFactor(mainCell, neighbour);
+
+        weightedProbabilities = 
+        temperatureWeight*temperatureFactor +
+        slopeWeight*slopeFactor +
+        windWeight*windFactor;
+
+        
+        cellIgnitionProbability = weightedProbabilities * humidityFactor;
+        
+        // Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " Prob = " + cellIgnitionProbability);
+
+        return cellIgnitionProbability;
+    }
+
+    private float CalculateTemperatureFactor()
+    {
+        return rawUserValues.temperature/rawUserValues.maxTemperature;
+    }
+
+    private float CalculateHumidityFactor()
+    {
+        //humidity is always out of 100%
+        //Subtract to get how "dry" it is.
+        float humidity = 1f-(rawUserValues.humidity/100f);  
+        //Squared curve (exponential)
+        float dryLevel = humidity * humidity;
+        //Drylevel is how dry it is and how dry it is affects all other variables
+        return dryLevel; 
     }
 
     private float CalculateWindFactor(int mainX, int mainZ, int neighbourX, int neighbourZ)
@@ -56,7 +97,7 @@ public class IgnitionProbabilityGenerator
         //If the value is 0 and less than 0, there is no wind factor at play
         return windFactor;
     }
-    public Vector2 GetWindDirection()
+    private Vector2 GetWindDirection()
     {
         //7:NW  0:N  1:NE → (-1,1)  (0,1)  (1,1)
         //6:W         2:E → (-1,0)  (0,0)  (1,0)
@@ -75,6 +116,49 @@ public class IgnitionProbabilityGenerator
             case 7: return new Vector2(-1,1).normalized;
             default: return new Vector2(0,0);
         }
+    }
+
+    private float CalculateSlopeFactor(GridCell mainCell, GridCell neighbour)
+    {
+        //Look at elevation between neighbour and main
+        //If increases, then higher slope factor
+        float elevChange = neighbour.elevation - mainCell.elevation;
+        //Now determine if the cells are diagonal from one another or adjacent
+        float changeX = Mathf.Abs(neighbour.GetCellX() - mainCell.GetCellX());
+        float changeZ = Mathf.Abs(neighbour.GetCellZ() - mainCell.GetCellZ());
+        float distanceBetweenCells = distBetweenAdjacentCells;
+        //Diagonal will have x and z both >0
+        if(changeX > 0 && changeZ > 0)
+        {
+            //If the cells are diagonal
+            distanceBetweenCells = distBetweenDiagonalCells;
+        }
+
+        //Now we have opposite and adjacent to get angle = Tan (TOA)
+        //tan-1(O/A), arctan, = arctan(elevChange/distancebtw) = angle
+        //Mathf = unity, MathF = C# system setting
+        float slopeAngleRad = Mathf.Atan(elevChange/distanceBetweenCells);
+        //arc tan is in radians, not degrees: https://www.geeksforgeeks.org/maths/arctan/
+        //Convert to degrees --> https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Mathf.Rad2Deg.html
+        float slopeAngleDeg = slopeAngleRad*Mathf.Rad2Deg;
+
+
+        float slopeFactor = 0f;
+        if(slopeAngleDeg > 0f)
+        {
+            //If it is an uphill slope, then it modifies the outcome
+            //gradual increase in fire behaviour, exponential, with 40 degree slope being an apex
+            // https://www.researchgate.net/figure/The-effect-of-slope-steepness-on-the-uphill-rate-of-spread-of-free-burning-wildland-fires_fig2_313350325
+            //Use 40 degree as cutoff, clamp the slope at 40
+            //Clamp01 clamps between 0 and 1: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Mathf.Clamp01.html 
+            float normalizedSlope = Mathf.Clamp01(slopeAngleDeg/40f);
+            //Now square the values to create an exponential curve
+            slopeFactor = normalizedSlope * normalizedSlope;
+        }
+        // Debug.Log("Change x, z: "+changeX+", "+changeZ+" Distance between: " + distanceBetweenCells + " ElevChange: "+elevChange + " SlopeDegrees: " + slopeAngleDeg + " Slope factor: " + slopeFactor);
+
+        return slopeFactor;
+
     }
 
     // private float CalculateFuelFactor(Cell neighbour)
