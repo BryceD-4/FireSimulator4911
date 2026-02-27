@@ -63,7 +63,7 @@ public class IgnitionProbabilityGenerator
         return cellIgnitionProbability;
     }
 
-    static private float CalculateFuelFactor(GridCell neighbour)
+    private float CalculateFuelFactor(GridCell neighbour)
     {
         //Get the fuel factor from this cell
         float fuelValue = neighbour.fuelLoad;
@@ -176,15 +176,4 @@ public class IgnitionProbabilityGenerator
         return slopeFactor;
 
     }
-
-    // private float CalculateFuelFactor(Cell neighbour)
-    // {
-    //     //Get the fuel factor from this cell
-    //     float fuelValue = neighbour.fuelLoad;
-
-    //     //Clamp the fuel value between 0 and 1. 
-    //     float normalizedFuel = Mathf.InverseLerp(0f, maxFuelAmount, fuelValue);
-
-    //     return normalizedFuel;
-    // }
 }

@@ -70,12 +70,10 @@ public class GridManager : MonoBehaviour
         //Used for collider down below
         worldPosition.y = cellHeight;
 
-//Hold for now until get to this stage of design
-        // nextCell.SetCellFuelValue(worldPosition, cellSize);
+        //Uses colliders to detect wihch fuel is in this cell.
+        nextCell.SetCellFuelValue(worldPosition, cellSize);
 
     }
-
-    
 
     public GridCell GetMapCell(int x, int z)
     {
@@ -99,10 +97,5 @@ public class GridManager : MonoBehaviour
     public GameObject GetGridVisualCell(int x, int z)
     {
         return gridVisuals[x,z];
-    }
-
-    void Update()
-    {
-        
     }
 }

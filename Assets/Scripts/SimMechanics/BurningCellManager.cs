@@ -100,6 +100,10 @@ public class BurningCellManager : MonoBehaviour
             z * cellSize + cellSize / 2
         );
         worldPos.y = ignitingCell.elevation;
+
+        //For debugging to check what cells are detecting the fuel
+        // if(ignitingCell.fuelLoad == 0.4f){
+
         //Place the prefab object for burning cell, at the world position
         //Instantiate(Object original, Vector3 position, Quaternion rotation)
         //The quaternion (a means of communicating 3D coordinates), is just how to orient the object
@@ -108,6 +112,8 @@ public class BurningCellManager : MonoBehaviour
         //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Quaternion-identity.html
         
         cellVisual = Instantiate(burningCellPrefab, worldPos, Quaternion.identity);
+        
+        // } //Part of debugging "if" above
 
         burningCells.Add(ignitingCell);
     }

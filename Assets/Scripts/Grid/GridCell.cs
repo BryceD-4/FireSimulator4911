@@ -1,4 +1,6 @@
 using UnityEngine;
+//Needed for HashSet<>
+using System.Collections.Generic;
 
 public class GridCell
 {
@@ -19,47 +21,59 @@ public class GridCell
     {
         this.x = x;
         this.z = z;
+        fuelLibrary = new Fuel();
     }
 
-    // public void SetCellFuelValue(Vector3 worldPosition, float cellSize)
-    // {
-    //     this.fuelLoad = fuelLibrary.regularFuel;
+    public void SetCellFuelValue(Vector3 worldPosition, float cellSize)
+    {
+        fuelLoad = fuelLibrary.regularFuel;
 
-    //     Collider[] cellFuelHits = Physics.OverlapBox(
-    //         worldPosition, 
-    //         new Vector3(cellSize, 12.0f, cellSize)*0.5f,
-    //         Quaternion.identity,
-    //         LayerMask.GetMask("FuelObject")
-    //     );
+        //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Physics.OverlapBox.html
+        //Increased y value to detect when objects are just below or above the slope surface
+        //As trees were sunken in and not being detected. 
 
-    //     //This is used to ensure the same object is not counted multiple times per cell
-    //     HashSet<GameObject> countedFuelObjects = new HashSet<GameObject>();
-    //     foreach(Collider collided in cellFuelHits)
-    //     {
-    //         GameObject rootObject = collided.transform.root.gameObject;
-    //         if (!countedFuelObjects.Contains(rootObject))
-    //         {
-    //             countedFuelObjects.Add(rootObject);
-    //             if (rootObject.CompareTag("Grass"))
-    //             {
-    //                 //Grass is very combustable
-    //                 this.fuelLoad += fuelLibrary.grassFuel;
+        //Adjusting the y position of this vector 3 affects how large the box is that we are detecting, 12 seemed to be the sweet spot. 
+        Collider[] cellFuelHits = Physics.OverlapBox(
+            worldPosition, 
+            new Vector3(cellSize, 12.0f, cellSize)*0.5f,
+            Quaternion.identity,
+            LayerMask.GetMask("FuelObject")
+        );
 
-    //             } else if (rootObject.CompareTag("LowTree"))
-    //             {
-    //                 //Low tree has ladder fuel and is more combustable
-    //                 this.fuelLoad += fuelLibrary.lowTreeFuel;
+        //This is used to ensure the same object is not counted multiple times per cell
+        HashSet<GameObject> countedFuelObjects = new HashSet<GameObject>();
+        foreach(Collider collided in cellFuelHits)
+        {
+            GameObject rootObject = collided.transform.root.gameObject;
 
-    //             }else if (rootObject.CompareTag("TallTree"))
-    //             {
-    //                 //If it is a tall tree, we want the fire to move slower
-    //                 //So make = and break loop here
-    //                 this.fuelLoad = fuelLibrary.tallTreeFuel;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
+            if (!countedFuelObjects.Contains(rootObject))
+            {
+                countedFuelObjects.Add(rootObject);
+                if (rootObject.CompareTag("Grass"))
+                {
+                    //Grass is very combustable
+                    this.fuelLoad += fuelLibrary.grassFuel;
+
+                } else if (rootObject.CompareTag("LowTree"))
+                {
+                    //Low tree has ladder fuel and is more combustable
+                    this.fuelLoad += fuelLibrary.lowTreeFuel;
+
+                }else if (rootObject.CompareTag("TallTree"))
+                {
+                    //If it is a tall tree, we want the fire to move slower
+                    //So make = and break loop here
+                    this.fuelLoad = fuelLibrary.tallTreeFuel;
+                    break;
+                }
+            }
+        }
+
+        if(fuelLoad == 0.3f || fuelLoad > 0.4f){
+            Debug.Log("Cell Fuel Val = " + fuelLoad);
+        }
+
+    }
     public int GetCellX()
     {
         return x;
