@@ -1,0 +1,63 @@
+using UnityEngine;
+
+public class GridCell
+{
+    private int x, z;
+    public float elevation;
+    public Fuel fuelLibrary;
+    public float fuelLoad;
+    
+    public GridCell(int x, int z)
+    {
+        this.x = x;
+        this.z = z;
+    }
+
+    // public void SetCellFuelValue(Vector3 worldPosition, float cellSize)
+    // {
+    //     this.fuelLoad = fuelLibrary.regularFuel;
+
+    //     Collider[] cellFuelHits = Physics.OverlapBox(
+    //         worldPosition, 
+    //         new Vector3(cellSize, 12.0f, cellSize)*0.5f,
+    //         Quaternion.identity,
+    //         LayerMask.GetMask("FuelObject")
+    //     );
+
+    //     //This is used to ensure the same object is not counted multiple times per cell
+    //     HashSet<GameObject> countedFuelObjects = new HashSet<GameObject>();
+    //     foreach(Collider collided in cellFuelHits)
+    //     {
+    //         GameObject rootObject = collided.transform.root.gameObject;
+    //         if (!countedFuelObjects.Contains(rootObject))
+    //         {
+    //             countedFuelObjects.Add(rootObject);
+    //             if (rootObject.CompareTag("Grass"))
+    //             {
+    //                 //Grass is very combustable
+    //                 this.fuelLoad += fuelLibrary.grassFuel;
+
+    //             } else if (rootObject.CompareTag("LowTree"))
+    //             {
+    //                 //Low tree has ladder fuel and is more combustable
+    //                 this.fuelLoad += fuelLibrary.lowTreeFuel;
+
+    //             }else if (rootObject.CompareTag("TallTree"))
+    //             {
+    //                 //If it is a tall tree, we want the fire to move slower
+    //                 //So make = and break loop here
+    //                 this.fuelLoad = fuelLibrary.tallTreeFuel;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+    public int getCellX()
+    {
+        return this.x;
+    }
+    public int getCellZ()
+    {
+        return this.z;
+    }
+}
