@@ -16,6 +16,9 @@ public class IgnitionProbabilityGenerator
     //These factors are the same for all cells
     private float temperatureFactor, humidityFactor;
 
+    //As the probability value is between 0 and the max fuel amount, using inverseLerp to get this between 0 and 1
+    private static float maxFuelAmount = 2.0f;
+
     public IgnitionProbabilityGenerator(float cellSize)
     {
         this.cellSize = cellSize;
@@ -44,11 +47,13 @@ public class IgnitionProbabilityGenerator
 
         windFactor = CalculateWindFactor(mainCell.GetCellX(), mainCell.GetCellZ(), neighbour.GetCellX(), neighbour.GetCellZ());
         slopeFactor = CalculateSlopeFactor(mainCell, neighbour);
+        fuelFactor = CalculateFuelFactor(neighbour);
 
         weightedProbabilities = 
         temperatureWeight*temperatureFactor +
         slopeWeight*slopeFactor +
-        windWeight*windFactor;
+        windWeight*windFactor + 
+        fuelWeight*fuelFactor;
 
         
         cellIgnitionProbability = weightedProbabilities * humidityFactor;
@@ -56,6 +61,17 @@ public class IgnitionProbabilityGenerator
         // Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " Prob = " + cellIgnitionProbability);
 
         return cellIgnitionProbability;
+    }
+
+    static private float CalculateFuelFactor(GridCell neighbour)
+    {
+        //Get the fuel factor from this cell
+        float fuelValue = neighbour.fuelLoad;
+
+        //Clamp the fuel value between 0 and 1. 
+        float normalizedFuel = Mathf.InverseLerp(0f, maxFuelAmount, fuelValue);
+
+        return normalizedFuel;
     }
 
     private float CalculateTemperatureFactor()
