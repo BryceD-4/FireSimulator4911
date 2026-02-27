@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 //Rotating camera about a space
 //REF: https://www.youtube.com/watch?v=4Jq5w5wlfsk
+
+//Modern input system modifications:
+//https://www.youtube.com/watch?v=cSkOx35Khlw&t=2s
 public class RotatingCamera : MonoBehaviour
 {
     //target = the item we want to rotate around = center of the  terrain
@@ -47,11 +50,11 @@ public class RotatingCamera : MonoBehaviour
         rotationDirection = 0f;
         if (keyboardObj.qKey.isPressed)
         {
-            rotationDirection = -1f;
+            rotationDirection -= 1f;
         }
         if (keyboardObj.eKey.isPressed)
         {
-            rotationDirection = 1f;
+            rotationDirection += 1f;
         }
     }
     private void ApplyCameraRotation()

@@ -4,11 +4,11 @@ public class GridManager : MonoBehaviour
 {
     //100 was chosen to reduce CPU load, as 150 and 200 were very slow
     private float terrainWidth, terrainLength;
-    public float cellSize;
+    private float cellSize;
 
-    public GridCell [,] mapGrid;
+    private GridCell [,] mapGrid;
 
-    public GameObject[,] gridVisuals;
+    private GameObject[,] gridVisuals;
 
     public void InitializeGrid(int gridWidth, int gridLength)
     {
@@ -69,9 +69,16 @@ public class GridManager : MonoBehaviour
 
     }
 
+    
+
     public GridCell GetMapCell(int x, int z)
     {
         return mapGrid[x,z];
+    }
+
+    public float GetCellSize()
+    {
+        return this.cellSize;
     }
 
     void Update()

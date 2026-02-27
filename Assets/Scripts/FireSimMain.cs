@@ -9,13 +9,10 @@ public class FireSimMain : MonoBehaviour
     void Start()
     {
         gridManager.InitializeGrid(gridSize, gridSize);
-        Debug.Log("Grid Made");
     }
 
     void Update()
     {
-        // rotateCamera.Update();
-                Debug.Log("UPDATE**");
-
+        
     }
 }

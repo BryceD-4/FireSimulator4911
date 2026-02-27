@@ -302,6 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RotatingCamera
   target: {fileID: 124527920}
   rotationSpeed: 60
+  rotationDirection: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67acd5fce184942aeaa65b889ca166eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireSimMain
+  gridManager: {fileID: 1259929393}
 --- !u!1 &1259929391
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,7 +695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb8fd6fcb4c349daad05bd5101284a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
-  cellSize: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
