@@ -66,6 +66,7 @@ public class GridMeshOverlay : MonoBehaviour
                     terrainHeight + heighOffset,
                     worldZ
                 );
+
                 //transparent colour (set RGBS to 0000)
                 colors[index] = Color.clear;
             }
@@ -120,9 +121,7 @@ public class GridMeshOverlay : MonoBehaviour
     }
 
     public void SetCellColour(int x, int z, Color color)
-    {
-        Debug.Log("Change colour!");
-        
+    {        
         //Color is stored per vertex, so need to get the vertices of 
         //the square to change the colour of a square.
         int bottomLeft = z*(gridWidth+1)+x;
