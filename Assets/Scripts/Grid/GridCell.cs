@@ -10,7 +10,7 @@ public class GridCell
     public float fuelLoad;
 
     public bool isBurning;
-    public bool isBurned;
+    public bool isExtinguished;
 
      //This is to make the cells burn out after a period of time
     //timer = how long it has burned, duration = total burn time

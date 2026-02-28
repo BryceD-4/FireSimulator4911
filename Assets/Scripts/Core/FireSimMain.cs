@@ -6,6 +6,7 @@ public class FireSimMain : MonoBehaviour
     public GridInteractor gridInteractor;
     public BurningCellManager burningCellManager;
     public UI_Manager uI_Manager;
+    public GridMeshOverlay gridMeshOverlay;
 
     private int gridSize = 100;
     
@@ -15,6 +16,7 @@ public class FireSimMain : MonoBehaviour
         gridInteractor.InitializeInteractor(gridSize, gridSize);
         burningCellManager.InitializeManager();
         uI_Manager.InitializeUIManager();
+        gridMeshOverlay.Initialize(gridSize, gridSize, gridManager.GetCellSize());
     }
 
     void Update()

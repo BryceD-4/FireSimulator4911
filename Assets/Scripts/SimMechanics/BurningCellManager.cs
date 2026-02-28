@@ -1,9 +1,11 @@
 using UnityEngine;
 //For List<>()
 using System.Collections.Generic;
+
 public class BurningCellManager : MonoBehaviour
 {
-    public List<GridCell> burningCells = new();
+    //User hashset as removal performance is better than list
+    public HashSet<GridCell> burningCells = new();
 
     //Used for probability of ignition
     private System.Random myRandom = new System.Random();
@@ -11,6 +13,9 @@ public class BurningCellManager : MonoBehaviour
     public GameObject burningCellPrefab;
 
     public IgnitionProbabilityGenerator igniteProbGen;
+
+    public GridMeshOverlay gridMeshOverlay;
+
     public void InitializeManager()
     {
         igniteProbGen = new IgnitionProbabilityGenerator(gridManager.GetCellSize());
@@ -21,6 +26,11 @@ public class BurningCellManager : MonoBehaviour
         //Need to keep a list of cells to ignite, or else creates a rippling effect
         //where the cell you just ignited causes this to run again.
         List<GridCell> cellsToIgnite = new();
+
+        //PErformance was tanking when cells began to extinguish, so separating ignition and
+        //extinguishing to mitigate/ separate overhead
+        List<GridCell> cellsToExtinguish = new();
+
         foreach (GridCell cell in burningCells)
         {
             //Get its neighbours probability of igniting
@@ -30,9 +40,12 @@ public class BurningCellManager : MonoBehaviour
             if(cell.burnTimer >= cell.maxBurnDuration)
             {
                 //BURN OUT THE CELL
+                // BurnOutCell(cell.GetCellX(), cell.GetCellZ());
+                cellsToExtinguish.Add(cell);
             }
         }
 
+        //Handle all ignition cells after iteration
         foreach(GridCell cell in cellsToIgnite)
         {
             //Cells may be repeated in list, so check the cell has not been tended to yet
@@ -41,7 +54,18 @@ public class BurningCellManager : MonoBehaviour
                 //IGNITE CELL HERE
                 IgniteCellVisually(cell.GetCellX(), cell.GetCellZ());
 
-                cell.isBurning = true;
+                // cell.isBurning = true;
+            }
+        }
+
+        //Handle all extinguish cells after the igniting
+        foreach(GridCell cell in cellsToExtinguish)
+        {
+            //Cells may be repeated in the list, so check it has not been
+            //already tended to
+            if (!cell.isExtinguished)
+            {
+                BurnOutCell(cell.GetCellX(), cell.GetCellZ());
             }
         }
     }
@@ -66,7 +90,7 @@ public class BurningCellManager : MonoBehaviour
                 //If not out of bounds, get the cell of interest
                 GridCell nextNeigh = gridManager.GetMapCell(x,z);
 
-                if (nextNeigh.isBurning || nextNeigh.isBurned)
+                if (nextNeigh.isBurning || nextNeigh.isExtinguished)
                 {
                     //If this cell is already burnt or is burning, continue
                     continue;
@@ -90,16 +114,22 @@ public class BurningCellManager : MonoBehaviour
     public void IgniteCellVisually(int x, int z)
     {
         GridCell ignitingCell = gridManager.GetMapCell(x,z);
-        GameObject cellVisual = gridManager.GetGridVisualCell(x,z);
-        float cellSize = gridManager.GetCellSize();
+
+        //Add and mark the cell in the lists
+        burningCells.Add(ignitingCell);
+        ignitingCell.isBurning = true;
+
+        // GameObject cellVisual = gridManager.GetGridVisualCell(x,z);
+        // float cellSize = gridManager.GetCellSize();
+       
 
         //Get 3D position of the cell
-        Vector3 worldPos = new Vector3(
-            x * cellSize + cellSize / 2,
-            0,
-            z * cellSize + cellSize / 2
-        );
-        worldPos.y = ignitingCell.elevation;
+        // Vector3 worldPos = new Vector3(
+        //     x * cellSize + cellSize / 2,
+        //     0,
+        //     z * cellSize + cellSize / 2
+        // );
+        // worldPos.y = ignitingCell.elevation;
 
         //For debugging to check what cells are detecting the fuel
         // if(ignitingCell.fuelLoad == 0.4f){
@@ -111,29 +141,36 @@ public class BurningCellManager : MonoBehaviour
         //Quaternion.identity --> This just lines the object up with the world axes, so that it sits square
         //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Quaternion-identity.html
         
-        cellVisual = Instantiate(burningCellPrefab, worldPos, Quaternion.identity);
+        // cellVisual = Instantiate(burningCellPrefab, worldPos, Quaternion.identity);
         
         // } //Part of debugging "if" above
 
-        burningCells.Add(ignitingCell);
+        gridMeshOverlay.SetCellColour(x,z, new Color(1f, 0.3f, 0f, 1.0f));
+
+        
     }
 
-    //  void BurnOutCell(int x, int z)
-    // {
-    //     grid[x,z].isBurning = false;
-    //     grid[x,z].isBurned = true;
+     void BurnOutCell(int x, int z)
+    {
+        GridCell currentCell = gridManager.GetMapCell(x,z);
+        //Remove the cell from the list so it is no longer dealt with.
+        burningCells.Remove(currentCell);
+
+        currentCell.isBurning = false;
+        currentCell.isExtinguished = true;
         
-    //     SetTerrainLayer(x,z,1);
+        gridMeshOverlay.SetCellColour(x,z, new Color(0.7f, 0.5f, 0.5f, 1.0f));
+        // SetTerrainLayer(x,z,1);
 
-    //     GameObject cellVisual = gridVisuals[x,z];
-    //     if(cellVisual != null)
-    //     {
-    //         // Renderer renderer = cellVisual.GetComponent<Renderer>();
-    //         // renderer.material = burnedMaterial;
+        // GameObject cellVisual = gridVisuals[x,z];
+        // if(cellVisual != null)
+        // {
+        //     // Renderer renderer = cellVisual.GetComponent<Renderer>();
+        //     // renderer.material = burnedMaterial;
 
-    //         Destroy(gridVisuals[x,z]);
-    //         gridVisuals[x,z] = null;
-    //     }
-    // }
+        //     Destroy(gridVisuals[x,z]);
+        //     gridVisuals[x,z] = null;
+        // }
+    }
     
 }//END CLASS
