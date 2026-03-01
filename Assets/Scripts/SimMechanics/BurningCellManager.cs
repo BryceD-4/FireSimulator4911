@@ -145,7 +145,8 @@ public class BurningCellManager : MonoBehaviour
         
         // } //Part of debugging "if" above
 
-        gridMeshOverlay.SetCellColour(x,z, new Color(1.0f, 0.25f, 0.0f, 1.0f));
+        gridMeshOverlay.SetCellColour(x,z, new Color(2.5f, 0.2f, 0.0f, 1.0f));
+        
 
         
     }
@@ -159,7 +160,7 @@ public class BurningCellManager : MonoBehaviour
         currentCell.isBurning = false;
         currentCell.isExtinguished = true;
         
-        gridMeshOverlay.SetCellColour(x,z, new Color(0.06f, 0.05f, 0.05f, 1.0f));
+        gridMeshOverlay.SetCellColour(x,z, new Color(0.02f, 0.02f, 0.02f, 1.0f));
         // gridMeshOverlay.SetCellColour(x,z, new Color(0f, 1f, 0f, 1.0f));
 
         // SetTerrainLayer(x,z,1);
