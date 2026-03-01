@@ -135,12 +135,13 @@ public class GridMeshOverlay : MonoBehaviour
         colors[topRight] = color;
 
         mesh.colors = colors;
-
+        //signal that the colours have changed. 
         colorArrChanged = true;
     }
 
     void LateUpdate()
     {
+        //Added so that colours are only updated once per frame as this array is very large. 
         if (colorArrChanged)
         {
             mesh.colors = colors;

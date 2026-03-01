@@ -8,10 +8,13 @@ public class IgnitionProbabilityGenerator
 
     private UserData rawUserValues;
 
-    private float windWeight = 0.2f; 
-    private float temperatureWeight = 0.02f; 
+    private float windWeight = 0.15f; 
+    private float temperatureWeight = 0.35f; 
     private float slopeWeight = 0.1f; 
-    private float fuelWeight = 0.2f;
+    private float fuelWeight = 0.35f;
+    private float humidityWeight = 0.4f;
+
+    // private float baseProb = 0.05;
 
     //These factors are the same for all cells
     private float temperatureFactor, humidityFactor;
@@ -53,16 +56,20 @@ public class IgnitionProbabilityGenerator
         temperatureWeight*temperatureFactor +
         slopeWeight*slopeFactor +
         windWeight*windFactor + 
-        fuelWeight*fuelFactor;
+        fuelWeight*fuelFactor +
+        humidityWeight * humidityFactor;
 
         
-        cellIgnitionProbability = weightedProbabilities * humidityFactor;
+        // cellIgnitionProbability = weightedProbabilities * humidityFactor;
+        cellIgnitionProbability = weightedProbabilities * 0.006f;
         
-        // Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " Prob = " + cellIgnitionProbability);
+        Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " slopeFactor = " 
+        + slopeFactor +" windFactor = " + windFactor + " FuelFact = " + fuelFactor +" Prob = " + cellIgnitionProbability);
 
         return cellIgnitionProbability;
     }
 
+    //Fuel --> linear
     private float CalculateFuelFactor(GridCell neighbour)
     {
         //Get the fuel factor from this cell
@@ -74,11 +81,14 @@ public class IgnitionProbabilityGenerator
         return normalizedFuel;
     }
 
+    //Temp --> exponential
     private float CalculateTemperatureFactor()
     {
-        return rawUserValues.temperature/rawUserValues.maxTemperature;
+        float temperatureVal = rawUserValues.temperature/rawUserValues.maxTemperature;
+        return temperatureVal*temperatureVal;
     }
 
+    //Humidity --> exponential 
     private float CalculateHumidityFactor()
     {
         //humidity is always out of 100%
@@ -90,6 +100,7 @@ public class IgnitionProbabilityGenerator
         return dryLevel; 
     }
 
+    //Wind --> Linear, Make exponential?
     private float CalculateWindFactor(int mainX, int mainZ, int neighbourX, int neighbourZ)
     {
         //WIND SPEED
@@ -134,6 +145,7 @@ public class IgnitionProbabilityGenerator
         }
     }
 
+    //SLOPE --> exponential
     private float CalculateSlopeFactor(GridCell mainCell, GridCell neighbour)
     {
         //Look at elevation between neighbour and main

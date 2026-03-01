@@ -57,12 +57,13 @@ public class GridInteractor : MonoBehaviour
                 if (IsValidCell(xIndex, zIndex))
                 {
                     //Only do this if the cell is not already burning
-                    if (!currentCell.isBurning)
+                    if (!currentCell.isBurning && !currentCell.isExtinguished)
                     {
                         //Set the cell to burning in the game grid
                         currentCell.isBurning = true;
 
-                        Debug.Log("Cell CLicked = " + xIndex +", " + zIndex);
+                        // Debug.Log("Cell CLicked = " + xIndex +", " + zIndex);
+
                         //Make the visual representation of burning
                         // SpawnBurningVisual(xIndex, zIndex);
                         burnCellManager.IgniteCellVisually(xIndex, zIndex);

@@ -14,7 +14,7 @@ public class GridCell
 
      //This is to make the cells burn out after a period of time
     //timer = how long it has burned, duration = total burn time
-    public float maxBurnDuration = 5.0f;
+    public float maxBurnDuration = 4.0f;
     public float burnTimer = 0f;
 
     public GridCell(int x, int z)
