@@ -16,40 +16,30 @@ public class RotatingCamera : MonoBehaviour
 
     void Update()
     {
-        // //The user can rotate the camera by pressing Q or E to rotate around the terrain
-        // if (Input.GetKey(KeyCode.Q))
-        // {
-        //     //Rotate around the center of the terrain
-        //     //Vector3.up is shorthand ffor 0,1,0 or rotate around y axis
-        //     //Set the speed to go appropriate for the delta time speed
-        //     transform.RotateAround(target.position, Vector3.up, -rotationSpeed * Time.deltaTime);
-        // }
-
-        // if (Input.GetKey(KeyCode.E))
-        // {
-        //     //Same as above
-        //     transform.RotateAround(target.position, Vector3.up, rotationSpeed * Time.deltaTime);
-        // }
-
         //Modified to the more modern version of control
         ReadInput();
         ApplyCameraRotation();
-
     }
 
     private void ReadInput()
     {
+       //REF: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Keyboard.html
         var keyboardObj = Keyboard.current;
 
+        //If the keyboard is not setup yet, return
         if(keyboardObj == null)
         {
             return;   
         }
         
         //Set to 0 for if user is not pressing
+        //this way pressing is not cumulative
         rotationDirection = 0f;
+        //Getting the key from the current keyboard obtained from the following example
+        //REF: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.12//api/UnityEngine.InputSystem.Keyboard.html
         if (keyboardObj.qKey.isPressed)
         {
+            //Using -= as just = means if both q and e are pressed, one wins instead of cancelling out.
             rotationDirection -= 1f;
         }
         if (keyboardObj.eKey.isPressed)
@@ -62,6 +52,9 @@ public class RotatingCamera : MonoBehaviour
         //If it is 0, we do nothing
         if(rotationDirection != 0)
         {
+            //Rotate around allows us to rotate an item about an axis through a point in the world.
+            //The item = center of terrain, axis = y axis, rotation amount depends on key press and consistent with deltatime
+            //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Transform.RotateAround.html
             transform.RotateAround(target.position, Vector3.up, rotationDirection*rotationSpeed*Time.deltaTime);
         }
     }
