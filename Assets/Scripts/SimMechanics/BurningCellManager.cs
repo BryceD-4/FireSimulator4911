@@ -4,23 +4,32 @@ using System.Collections.Generic;
 
 public class BurningCellManager : MonoBehaviour
 {
-    //User hashset as removal performance is better than list
+    //Used hashset as removal performance is better than list
     public HashSet<GridCell> burningCells = new();
 
     //Used for probability of ignition
     private System.Random myRandom = new System.Random();
+    //Grid manager needed to get the cell to modify
     public GridManager gridManager;
-    public GameObject burningCellPrefab;
+    
+    //Used for debugging to display the cell being selected
+    // public GameObject burningCellPrefab;
 
+    //Used to get the probability of ignition
     public IgnitionProbabilityGenerator igniteProbGen;
 
+    //The game object which houses the grid mesh.
     public GridMeshOverlay gridMeshOverlay;
 
+    //Called by FireSimMain
     public void InitializeManager()
     {
+        //Create a singular probability generator for use
         igniteProbGen = new IgnitionProbabilityGenerator(gridManager.GetCellSize());
     }
 
+    //Loops through all burning cells, checks their neighbours for ingition probability. 
+    //also checks if the cell is to be extinguished. 
     public void UpdateBurningCells()
     {
         //Need to keep a list of cells to ignite, or else creates a rippling effect
@@ -39,8 +48,7 @@ public class BurningCellManager : MonoBehaviour
             cell.burnTimer += Time.deltaTime;
             if(cell.burnTimer >= cell.maxBurnDuration)
             {
-                //BURN OUT THE CELL
-                // BurnOutCell(cell.GetCellX(), cell.GetCellZ());
+                //BURN OUT THE CELL if it has been bruning longer than the burn duration
                 cellsToExtinguish.Add(cell);
             }
         }
@@ -51,10 +59,8 @@ public class BurningCellManager : MonoBehaviour
             //Cells may be repeated in list, so check the cell has not been tended to yet
             if (!cell.isBurning)
             {
-                //IGNITE CELL HERE
+                //IGNITE CELL
                 IgniteCellVisually(cell.GetCellX(), cell.GetCellZ());
-
-                // cell.isBurning = true;
             }
         }
 
@@ -65,6 +71,7 @@ public class BurningCellManager : MonoBehaviour
             //already tended to
             if (!cell.isExtinguished)
             {
+                //Extinguish the cell
                 BurnOutCell(cell.GetCellX(), cell.GetCellZ());
             }
         }
@@ -119,6 +126,8 @@ public class BurningCellManager : MonoBehaviour
         burningCells.Add(ignitingCell);
         ignitingCell.isBurning = true;
 
+
+        //DEBUGGING START-------
         // GameObject cellVisual = gridManager.GetGridVisualCell(x,z);
         // float cellSize = gridManager.GetCellSize();
        
@@ -144,27 +153,30 @@ public class BurningCellManager : MonoBehaviour
         // cellVisual = Instantiate(burningCellPrefab, worldPos, Quaternion.identity);
         
         // } //Part of debugging "if" above
+        //DEBUGGING END--------
 
+        //Colour is an orange fire colour
         gridMeshOverlay.SetCellColour(x,z, new Color(2.5f, 0.2f, 0.0f, 1.0f));
         
 
         
     }
 
+    //This makes the cell turn black on the grid overlay
      void BurnOutCell(int x, int z)
     {
+        //Get the current cell
         GridCell currentCell = gridManager.GetMapCell(x,z);
-        //Remove the cell from the list so it is no longer dealt with.
+        //Remove the cell from the list so it is no longer iterated in future.
         burningCells.Remove(currentCell);
 
+        //Set booleans for communication
         currentCell.isBurning = false;
         currentCell.isExtinguished = true;
         
         gridMeshOverlay.SetCellColour(x,z, new Color(0.02f, 0.02f, 0.02f, 1.0f));
-        // gridMeshOverlay.SetCellColour(x,z, new Color(0f, 1f, 0f, 1.0f));
-
-        // SetTerrainLayer(x,z,1);
-
+        
+        //FOR DEBUGGING----START----
         // GameObject cellVisual = gridVisuals[x,z];
         // if(cellVisual != null)
         // {
@@ -174,6 +186,8 @@ public class BurningCellManager : MonoBehaviour
         //     Destroy(gridVisuals[x,z]);
         //     gridVisuals[x,z] = null;
         // }
+        //FOR DEBUGGING----END----
+
     }
     
 }//END CLASS
