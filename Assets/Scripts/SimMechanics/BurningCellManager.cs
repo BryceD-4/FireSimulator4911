@@ -21,17 +21,23 @@ public class BurningCellManager : MonoBehaviour
     //The game object which houses the grid mesh.
     public GridMeshOverlay gridMeshOverlay;
 
+    private float neighbourIgnitionTimer;
+
     //Called by FireSimMain
     public void InitializeManager()
     {
         //Create a singular probability generator for use
         igniteProbGen = new IgnitionProbabilityGenerator(gridManager.GetCellSize());
+
+        neighbourIgnitionTimer = 0;
     }
 
     //Loops through all burning cells, checks their neighbours for ingition probability. 
     //also checks if the cell is to be extinguished. 
     public void UpdateBurningCells()
     {
+        neighbourIgnitionTimer++;
+        
         //Need to keep a list of cells to ignite, or else creates a rippling effect
         //where the cell you just ignited causes this to run again.
         List<GridCell> cellsToIgnite = new();
@@ -42,8 +48,10 @@ public class BurningCellManager : MonoBehaviour
 
         foreach (GridCell cell in burningCells)
         {
-            //Get its neighbours probability of igniting
-            cellsToIgnite = IgniteNeighboursIfAble(cellsToIgnite, cell.GetCellX(), cell.GetCellZ());
+            if(neighbourIgnitionTimer %5 == 0){
+                //Get its neighbours probability of igniting
+                cellsToIgnite = IgniteNeighboursIfAble(cellsToIgnite, cell.GetCellX(), cell.GetCellZ());
+            }
             //Check if this cell has burned out
             cell.burnTimer += Time.deltaTime;
             if(cell.burnTimer >= cell.maxBurnDuration)
@@ -107,7 +115,8 @@ public class BurningCellManager : MonoBehaviour
                 ignitionProbability = igniteProbGen.GetIgnitionProbability(mainCell, nextNeigh);
                 float nextRand = (float)myRandom.NextDouble();
 
-                if(nextRand < ignitionProbability)
+                //Added x2 to slow rate of spread
+                if((nextRand * 2) < ignitionProbability)
                 {
                     //If our probability is higher than the random value
                     //Ignite this cell
