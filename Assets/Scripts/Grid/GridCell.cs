@@ -15,7 +15,7 @@ public class GridCell
 
     //This is to make the cells burn out after a period of time
     //timer = how long it has burned, duration = total burn time
-    public float maxBurnDuration = 4.0f;
+    public float maxBurnDuration = 2.0f;
     public float burnTimer = 0f;
 
     public GridCell(int x, int z)
@@ -45,12 +45,31 @@ public class GridCell
         HashSet<GameObject> countedFuelObjects = new HashSet<GameObject>();
         foreach(Collider collided in cellFuelHits)
         {
-            //Get the root object of the collided object
-            //This is to stop the same object from being detected multiple times
-            //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Transform-root.html
-            GameObject rootObject = collided.transform.root.gameObject;
+            // //Get the root object of the collided object
+            // //This is to stop the same object from being detected multiple times
+            // //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Transform-root.html
+            Transform currentObj = collided.transform;
+            GameObject rootObject = null;
+            
+            //Need to start at the object found and iterate up to the main parent of that plant. 
+            //This avoids counting each of the objects of a given plant as a different plant, 
+            //i.e. each plant counted only once
+            //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Transform-parent.html
+            while(currentObj != null)
+            {
+                //If we are at a plant object level
+                if(currentObj.CompareTag("Grass") || currentObj.CompareTag("LowTree") || currentObj.CompareTag("TallTree"))
+                {
+                    //If we are at the object, stop here
+                    rootObject = currentObj.gameObject;
+                    break;
+                }
+                //Move up one level to get parent and continue
+                currentObj = currentObj.parent;
+            }
 
-            if (!countedFuelObjects.Contains(rootObject))
+
+            if (rootObject != null && !countedFuelObjects.Contains(rootObject))
             {
                 //If the root is not already counted, we count it and update the cell for this object.
                 countedFuelObjects.Add(rootObject);
@@ -75,9 +94,9 @@ public class GridCell
         }
 
         //DEBUG only
-        // if(fuelLoad == 0.3f || fuelLoad > 0.4f){
-        //     Debug.Log("Cell Fuel Val = " + fuelLoad);
-        // }
+        if(fuelLoad == fuelLibrary.tallTreeFuel || fuelLoad > fuelLibrary.regularFuel){
+            Debug.Log("Cell Fuel Val = " + fuelLoad);
+        }
 
     }
     public int GetCellX()
