@@ -6,13 +6,14 @@ public class GridCell
 {
     private int x, z;
     public float elevation;
+    //This simply holds the costs of the fuel objects.
     public Fuel fuelLibrary;
     public float fuelLoad;
 
     public bool isBurning;
     public bool isExtinguished;
 
-     //This is to make the cells burn out after a period of time
+    //This is to make the cells burn out after a period of time
     //timer = how long it has burned, duration = total burn time
     public float maxBurnDuration = 4.0f;
     public float burnTimer = 0f;
@@ -44,10 +45,14 @@ public class GridCell
         HashSet<GameObject> countedFuelObjects = new HashSet<GameObject>();
         foreach(Collider collided in cellFuelHits)
         {
+            //Get the root object of the collided object
+            //This is to stop the same object from being detected multiple times
+            //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Transform-root.html
             GameObject rootObject = collided.transform.root.gameObject;
 
             if (!countedFuelObjects.Contains(rootObject))
             {
+                //If the root is not already counted, we count it and update the cell for this object.
                 countedFuelObjects.Add(rootObject);
                 if (rootObject.CompareTag("Grass"))
                 {
@@ -69,9 +74,10 @@ public class GridCell
             }
         }
 
-        if(fuelLoad == 0.3f || fuelLoad > 0.4f){
-            Debug.Log("Cell Fuel Val = " + fuelLoad);
-        }
+        //DEBUG only
+        // if(fuelLoad == 0.3f || fuelLoad > 0.4f){
+        //     Debug.Log("Cell Fuel Val = " + fuelLoad);
+        // }
 
     }
     public int GetCellX()

@@ -1437,7 +1437,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BurningCellManager
   gridManager: {fileID: 1259929393}
-  burningCellPrefab: {fileID: 275431385379272997, guid: b728f1615a9ee4b4c93baabfb955f846, type: 3}
   gridMeshOverlay: {fileID: 405595367}
 --- !u!114 &804790652 stripped
 MonoBehaviour:
@@ -2682,6 +2681,10 @@ PrefabInstance:
     - target: {fileID: 412041076597573227, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 717518685708527422, guid: 23142e0238099450e91f509523f94fe1, type: 3}
+      propertyPath: m_MaxValue
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2138106616079466214, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_Name

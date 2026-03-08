@@ -3,11 +3,14 @@ using UnityEngine;
 public class IgnitionProbabilityGenerator
 {
     private float cellSize;
+    //Adjacent and diagnoal cells will be a different distance apart, need to account for both
     private float distBetweenAdjacentCells;
     private float distBetweenDiagonalCells;
 
+    //This is used to hold the user data received from the UI manager
     private UserData rawUserValues;
 
+    //Weights of each factor for the weighted probability formula
     private float windWeight = 0.15f; 
     private float temperatureWeight = 0.35f; 
     private float slopeWeight = 0.1f; 
@@ -22,6 +25,7 @@ public class IgnitionProbabilityGenerator
     //As the probability value is between 0 and the max fuel amount, using inverseLerp to get this between 0 and 1
     private static float maxFuelAmount = 2.0f;
 
+    //Constructor
     public IgnitionProbabilityGenerator(float cellSize)
     {
         this.cellSize = cellSize;
@@ -42,16 +46,19 @@ public class IgnitionProbabilityGenerator
     
     public float GetIgnitionProbability(GridCell mainCell, GridCell neighbour)
     {
+        //Create all variablles
         float weightedProbabilities;
         float cellIgnitionProbability;
         float windFactor;
         float slopeFactor; 
         float fuelFactor;
+        float outputDampener = 0.006f;
 
         windFactor = CalculateWindFactor(mainCell.GetCellX(), mainCell.GetCellZ(), neighbour.GetCellX(), neighbour.GetCellZ());
         slopeFactor = CalculateSlopeFactor(mainCell, neighbour);
         fuelFactor = CalculateFuelFactor(neighbour);
 
+        //Probabilities used are sum[weight*factor]n
         weightedProbabilities = 
         temperatureWeight*temperatureFactor +
         slopeWeight*slopeFactor +
@@ -59,12 +66,12 @@ public class IgnitionProbabilityGenerator
         fuelWeight*fuelFactor +
         humidityWeight * humidityFactor;
 
-        
         // cellIgnitionProbability = weightedProbabilities * humidityFactor;
-        cellIgnitionProbability = weightedProbabilities * 0.006f;
+        cellIgnitionProbability = weightedProbabilities * outputDampener;
         
-        Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " slopeFactor = " 
-        + slopeFactor +" windFactor = " + windFactor + " FuelFact = " + fuelFactor +" Prob = " + cellIgnitionProbability);
+        //USER FOR DEBUG VALUES
+        // Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " slopeFactor = " 
+        // + slopeFactor +" windFactor = " + windFactor + " FuelFact = " + fuelFactor +" Prob = " + cellIgnitionProbability);
 
         return cellIgnitionProbability;
     }
@@ -75,13 +82,14 @@ public class IgnitionProbabilityGenerator
         //Get the fuel factor from this cell
         float fuelValue = neighbour.fuelLoad;
 
-        //Clamp the fuel value between 0 and 1. 
+        //Clamp the fuel value between 0 and 1 using inverseLerp. 
+        //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Mathf.InverseLerp.html
         float normalizedFuel = Mathf.InverseLerp(0f, maxFuelAmount, fuelValue);
 
         return normalizedFuel;
     }
 
-    //Temp --> exponential
+    //Temp --> exponential (squared)
     private float CalculateTemperatureFactor()
     {
         float temperatureVal = rawUserValues.temperature/rawUserValues.maxTemperature;
@@ -111,17 +119,22 @@ public class IgnitionProbabilityGenerator
         Vector2 windDirection = GetWindDirection();
         int changeX = neighbourX-mainX;
         int changeZ = neighbourZ-mainZ;
+        //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Vector2.Normalize.html
         Vector2 directionToNeighbour = new Vector2(changeX, changeZ).normalized;
         //This will be >0, 0, <0
         //Once normalized, is now 1, 0, -1
+        // if wind is going north, dot product (once normalized) is:
+        //7:NW  0:N  1:NE -> (-1,1)  (0,1)  (1,1)    ->  1   1   1
+        //6:W         2:E -> (-1,0)  (0,0)  (1,0)    ->  0   x   0
+        //5:SW  4:S  3:SE -> (-1,-1) (0,-1) (1, -1)  -> -1  -1  -1
+          
         float windDirectionValue = Vector2.Dot(windDirection, directionToNeighbour);
 
         float windFactor = Mathf.Max(0,windDirectionValue)*windSpeedValue;
 
         // Debug.Log("WIND --> direction: "+windDirection.ToString() + " DirToNeigh: "+directionToNeighbour.ToString() 
         // + " WindDirVal: "+windDirectionValue.ToString());
-        //Now just get the wind direction and compound this with the wind speed. 
-        //If the value is 0 and less than 0, there is no wind factor at play
+       
         return windFactor;
     }
     private Vector2 GetWindDirection()
@@ -133,7 +146,7 @@ public class IgnitionProbabilityGenerator
         switch (rawUserValues.windDirection)
         {
             case 0: return new Vector2(0,1);
-            //Returns vector == 1 and not 1.41
+            //Need to normalize all diagonal vectors or else vector is 1.41 instead of 1
             case 1: return new Vector2(1,1).normalized;
             case 2: return new Vector2(1,0);
             case 3: return new Vector2(1,-1).normalized;
