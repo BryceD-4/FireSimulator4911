@@ -5,15 +5,17 @@ public class CompassCubeRotate : MonoBehaviour
     //This holds a reference to the camera itself
     public Transform cameraTransform;
     //This is the offset of the cube from the camera position
+    //Values chosen were based off of trial and error until cube was centered nicely.
     public Vector3 offset = new Vector3(0f, 14f, 30f);
     //This is the center of the terrain itself
     public Transform terrainCenter;
 
-    // Update is called once per frame
+    // Update is called once per frame, after all other updates are called
      void LateUpdate()
     {
         //Get the cube to always be oriented with the camera
         //The offset places the cube in the same spot on the screen at all times
+        //REF: https://stackoverflow.com/questions/75984333/bring-gameobject-to-the-position-of-camera#:~:text=To%20achieve%20this%20you%20could,3001%209
         transform.position = cameraTransform.position + 
                              cameraTransform.right * offset.x +
                              cameraTransform.up * offset.y +

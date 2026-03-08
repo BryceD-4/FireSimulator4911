@@ -4,13 +4,17 @@ using UnityEngine.InputSystem;
 //This stores the mouse clicks and hover functions
 public class GridInteractor : MonoBehaviour
 {
+    //Grid manager needed for grid iterations
     public GridManager gridManager;
     //Needed so that if a cell is clicked, we can ignite it
     public BurningCellManager burnCellManager;
     float cellSize;
+    //This game object is what the user sees under their cursor
     public GameObject cursorHighlighter;
 
     private int gridLength, gridWidth;
+
+    //Called by FireSimMain
     public void InitializeInteractor(int gridL, int gridW)
     {
         gridLength = gridL;
@@ -32,9 +36,11 @@ public class GridInteractor : MonoBehaviour
         }
     }
 
+    //If the user clicks a valid map cell, the cell clicked on will ignite and begin burning
     void IgniteCellUnderMouse()
     {
         //same as above, we get the ray to the point on the screen where the mouse is
+        //REF example used: https://discussions.unity.com/t/screenpointtoray-mouseposition/405095
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
 
@@ -43,6 +49,8 @@ public class GridInteractor : MonoBehaviour
         // but rather the terrain below it (the next item down). 
         if (Physics.Raycast(ray, out hit))
         {
+           //If the collider collides with a terrain component
+           //As per REF: https://discussions.unity.com/t/detect-collision-with-terrain/779307
             if (hit.collider.GetComponent<Terrain>())
             {
                 //As we did above, get the point of contact
@@ -51,7 +59,7 @@ public class GridInteractor : MonoBehaviour
                 //Get the x and z positions of this point
                 int xIndex = Mathf.FloorToInt(worldPos.x / cellSize);
                 int zIndex = Mathf.FloorToInt(worldPos.z / cellSize);
-
+                //Get the current cell using these coordinates
                 GridCell currentCell = gridManager.GetMapCell(xIndex, zIndex);
                 //If the cell is within the game grid
                 if (IsValidCell(xIndex, zIndex))
@@ -62,10 +70,7 @@ public class GridInteractor : MonoBehaviour
                         //Set the cell to burning in the game grid
                         currentCell.isBurning = true;
 
-                        // Debug.Log("Cell CLicked = " + xIndex +", " + zIndex);
-
                         //Make the visual representation of burning
-                        // SpawnBurningVisual(xIndex, zIndex);
                         burnCellManager.IgniteCellVisually(xIndex, zIndex);
                     }
                 }
