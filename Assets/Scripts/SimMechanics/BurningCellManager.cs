@@ -48,7 +48,7 @@ public class BurningCellManager : MonoBehaviour
 
         foreach (GridCell cell in burningCells)
         {
-            if(neighbourIgnitionTimer %5 == 0){
+            if(neighbourIgnitionTimer %8 == 0){
                 //Get its neighbours probability of igniting
                 cellsToIgnite = IgniteNeighboursIfAble(cellsToIgnite, cell.GetCellX(), cell.GetCellZ());
             }

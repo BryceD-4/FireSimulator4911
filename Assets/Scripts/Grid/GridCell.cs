@@ -94,9 +94,9 @@ public class GridCell
         }
 
         //DEBUG only
-        if(fuelLoad == fuelLibrary.tallTreeFuel || fuelLoad > fuelLibrary.regularFuel){
-            Debug.Log("Cell Fuel Val = " + fuelLoad);
-        }
+        // if(fuelLoad == fuelLibrary.tallTreeFuel || fuelLoad > fuelLibrary.regularFuel){
+        //     Debug.Log("Cell Fuel Val = " + fuelLoad);
+        // }
 
     }
     public int GetCellX()
