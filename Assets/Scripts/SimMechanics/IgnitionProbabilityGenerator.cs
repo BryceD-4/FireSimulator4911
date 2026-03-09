@@ -1,3 +1,11 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This program handles all probability claculations to determine if
+a cell will be ignited by a neighbouring cell. 
+
+*/
 using UnityEngine;
 
 public class IgnitionProbabilityGenerator
@@ -17,12 +25,11 @@ public class IgnitionProbabilityGenerator
     private float fuelWeight = 0.1f;
     private float humidityWeight = 0.30f;
 
-    // private float baseProb = 0.05;
-
     //These factors are the same for all cells
     private float temperatureFactor, humidityFactor;
 
     //As the probability value is between 0 and the max fuel amount, using inverseLerp to get this between 0 and 1
+    //a value of 2 was chosen simply based on review of the values from the map.
     private static float maxFuelAmount = 2.0f;
 
     //Constructor
@@ -53,7 +60,7 @@ public class IgnitionProbabilityGenerator
         float windFactor;
         float slopeFactor; 
         float fuelFactor;
-        float outputDampener = 0.25f; //0.006f
+        float outputDampener = 0.25f; 
 
         windFactor = CalculateWindFactor(mainCell.GetCellX(), mainCell.GetCellZ(), neighbour.GetCellX(), neighbour.GetCellZ());
         slopeFactor = CalculateSlopeFactor(mainCell, neighbour);
@@ -63,7 +70,12 @@ public class IgnitionProbabilityGenerator
         baseProbability = 
         fuelFactor*fuelWeight + temperatureFactor*temperatureWeight;
 
-        //Arranged for testing variable values
+        /*
+        BELOW:
+        - these preset items numbered 1-7 below are used to manually test
+        variables independently/ gradually whenever a value is changed. 
+        */
+
         //1 base only
         // weightedProbabilities = 
         // baseProbability * outputDampener; 
@@ -108,18 +120,6 @@ public class IgnitionProbabilityGenerator
         * (1-humidityFactor*humidityWeight)
         * outputDampener; 
         
-//OLD FORMULA - not working
-        //Probabilities used are sum[weight*factor]n
-        // weightedProbabilities = 
-        // temperatureWeight*temperatureFactor +
-        // slopeWeight*slopeFactor +
-        // windWeight*windFactor + 
-        // fuelWeight*fuelFactor +
-        // humidityWeight * humidityFactor;
-
-        //Previously trialled, but gave humidity too much pull
-        // cellIgnitionProbability = weightedProbabilities * humidityFactor;
-
         //Clamp between 0 and 1
         cellIgnitionProbability = Mathf.Clamp01(weightedProbabilities);
         
@@ -127,8 +127,8 @@ public class IgnitionProbabilityGenerator
         // Debug.Log("Temp Factor = " + temperatureFactor + " HumidFact = " + humidityFactor + " slopeFactor = " 
         // + slopeFactor +" windFactor = " + windFactor + " FuelFact = " + fuelFactor +" Prob = " + cellIgnitionProbability);
 
-        Debug.Log("Temp prob = " + (temperatureFactor*temperatureWeight) + " Humidprob = " + (humidityFactor*humidityWeight) + " slopeProb = " 
-        + (slopeFactor*slopeWeight) +" windProb = " + (windFactor*windWeight) + " FuelProb = " + (fuelFactor*fuelWeight) +" Prob = " + cellIgnitionProbability);
+        // Debug.Log("Temp prob = " + (temperatureFactor*temperatureWeight) + " Humidprob = " + (humidityFactor*humidityWeight) + " slopeProb = " 
+        // + (slopeFactor*slopeWeight) +" windProb = " + (windFactor*windWeight) + " FuelProb = " + (fuelFactor*fuelWeight) +" Prob = " + cellIgnitionProbability);
 
         return cellIgnitionProbability;
     }
@@ -143,8 +143,6 @@ public class IgnitionProbabilityGenerator
         //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Mathf.InverseLerp.html
         float normalizedFuel = Mathf.InverseLerp(0f, maxFuelAmount, fuelValue);
 
-        // Debug.Log("FuelVal = " + fuelValue +" normalized fuel = " + normalizedFuel);
-
         return normalizedFuel;
     }
 
@@ -158,27 +156,20 @@ public class IgnitionProbabilityGenerator
     //Humidity --> exponential 
     private float CalculateHumidityFactor()
     {
-        //humidity is always out of 100%
-        //Subtract to get how "dry" it is.
-        // float humidity = 1f-(rawUserValues.humidity/100f);  
-        // //Squared curve (exponential)
-        // float dryLevel = humidity * humidity;
-        // //Drylevel is how dry it is and how dry it is affects all other variables
-        // return dryLevel; 
-
-
+        //In formula above, humidity is added as a 1- multiplier, meaning we just 
+        //return the value ratio received. 
         float humidity = rawUserValues.humidity/100f;
         return humidity*humidity;
     }
 
-    //Wind --> Linear, Make exponential?
+    //Wind --> exponential
     private float CalculateWindFactor(int mainX, int mainZ, int neighbourX, int neighbourZ)
     {
         //WIND SPEED
-        //Need to map the wind speed on a range of 0-200
+        //Need to map the wind speed on a range of 0-60
         float windSpeedValue = rawUserValues.windSpeed/rawUserValues.maxWindSpeed;
 
-        //WIND DIRECTION
+        //WIND DIRECTION, get change in wind direction from main to neighbour
         Vector2 windDirection = GetWindDirection();
         int changeX = neighbourX-mainX;
         int changeZ = neighbourZ-mainZ;
@@ -193,7 +184,7 @@ public class IgnitionProbabilityGenerator
           
         float windDirectionValue = Vector2.Dot(windDirection, directionToNeighbour);
 
-        //Make exponential as wind wa shaving a very small effect and needs to be highlighted more. 
+        //Made exponential as wind was having a very small effect and needs to be highlighted more. 
         float windFactor = Mathf.Max(0,windDirectionValue)*windSpeedValue*windSpeedValue;
 
         // Debug.Log("WIND --> direction: "+windDirection.ToString() + " DirToNeigh: "+directionToNeighbour.ToString() 

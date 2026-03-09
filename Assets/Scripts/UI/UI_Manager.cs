@@ -1,3 +1,12 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This program handles the user input from the parameter entry form on the 
+screen for temperature, humidity, and wind. 
+This program initializes these items and disables them once simulation begins.  
+
+*/
 using UnityEngine;
 using TMPro; //Keep, needed for text
 
@@ -74,16 +83,15 @@ public class UI_Manager : MonoBehaviour
     //Gets parameters enterred and stores them in the userData object
     void GatherUserData()
     {
-        //We would then get all the values for the input elements here***
-        //Temp = temperatureInput.parse....
+        //Get all data from the sliders entered
         userInputData.windDirection = windDirectionDropDown.value;
         userInputData.windSpeed = windSpeedSlider.value;
         userInputData.humidity = humiditySlider.value;
+        userInputData.temperature = temperatureSlider.value;
 
         //This gets the max value from the actual slider object in unity
-        //This was we always have a correct wind speed calculation
+        //This was we always have a correct wind speed/ temp calculation
         userInputData.maxWindSpeed = windSpeedSlider.maxValue;
-        userInputData.temperature = temperatureSlider.value;
         userInputData.maxTemperature = temperatureSlider.maxValue;
     }
 

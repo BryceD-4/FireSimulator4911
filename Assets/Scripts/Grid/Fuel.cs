@@ -1,3 +1,9 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This class simply holds the costs for setting the fuel types of the grid cells. 
+*/
 using UnityEngine;
 
 public class Fuel
