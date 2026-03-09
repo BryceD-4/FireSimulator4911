@@ -1,3 +1,12 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This program handles all user interactions with the grid. 
+It detects and shows the user mouse hover over the map and detects when the 
+user presses on a valid cell in the map to ignite a fire. 
+
+*/
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +26,8 @@ public class GridInteractor : MonoBehaviour
     //Called by FireSimMain
     public void InitializeInteractor(int gridL, int gridW)
     {
+        //update the grid items following grid creation
+        //this can be seen in FireSimMain
         gridLength = gridL;
         gridWidth = gridW;
 
@@ -28,10 +39,12 @@ public class GridInteractor : MonoBehaviour
 
     public void UpdateInteractor()
     {
+        //Allows user to see which cell they are going to click
         DetectMouseHoverCell();
-
+        
         if(Mouse.current.leftButton.wasPressedThisFrame)
         {
+            //If the user clicked, check if it is a valid cell and ignite it
             IgniteCellUnderMouse();
         }
     }
@@ -44,10 +57,17 @@ public class GridInteractor : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
 
+        
+        //Setting a layerMaks: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/LayerMask.html
+        //Used below to selectively get only the terrain colliders (i.e. ignore trees and grass)
+        int layerMask = LayerMask.GetMask("Terrain");
+
         //In unity, we had to take the higlighter and in inspector, turn it from Layer: default to
         //Layer: ignore raycast, so that when we click, it is not just hitting the highlighter object, 
         // but rather the terrain below it (the next item down). 
-        if (Physics.Raycast(ray, out hit))
+        //Selectively choose which colliders are picked (so that trees and grass do not interfere**)
+        //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Physics.Raycast.html
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
            //If the collider collides with a terrain component
            //As per REF: https://discussions.unity.com/t/detect-collision-with-terrain/779307
@@ -97,6 +117,9 @@ public class GridInteractor : MonoBehaviour
         //Input.mousePoisiton (is deprecated, but still works in this instance): https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Input-mousePosition.html
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
+        //Setting a layerMaks: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/LayerMask.html
+        //Used below to selectively get only the terrain colliders (i.e. ignore trees and grass)
+        int layerMask = LayerMask.GetMask("Terrain");
 
         //RaycastHit is used to get information from a RayCast object
         //RayCast object --> casts a ray from origin, in direction, to maxdistance, against all scene colliders
@@ -105,7 +128,9 @@ public class GridInteractor : MonoBehaviour
         RaycastHit hit;
 
         //Use the ray (the 3D line) to find the line of sight, while hit holds information of the first item that was hit on this line
-        if (Physics.Raycast(ray, out hit))
+        //Selectively choose which colliders are picked (so that trees and grass do not interfere**)
+        //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Physics.Raycast.html
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
             //If the item that was collided with on this ray was terrain, enter here
             if (hit.collider.GetComponent<Terrain>())

@@ -1,3 +1,12 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This class holds the mesh overlay of the grid. A mesh was added
+as it can have colours easily modified and is automatically restarted when
+the simulation restarts (unlike changing the physical colour of the terrain itself). 
+
+*/
 using UnityEngine;
 
 //to run this code successfully, must setCellSize and theninitialize the code.
@@ -57,7 +66,7 @@ public class GridMeshOverlay : MonoBehaviour
         mesh.colors = colors;
         //Normals determine how light hits a surface, but using
         //Unlit material = lighting is minimal effect. 
-        //this just ensures mesh shades correctly
+        //this just ensures mesh shades correctly as per reference above
         mesh.RecalculateNormals();
     }
     void CreateVertices()
@@ -103,6 +112,7 @@ public class GridMeshOverlay : MonoBehaviour
                 int vertexIndex = z*(gridWidth+1)+x;
 
                 //Math/ logic for this section:
+                //REF, logic built from information provided here: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Mesh.html
                 //assume Length & width = 1 (as this is one square with 4 vertices)
                 //0  1 <-- 0 = bottomLeft, 1 = bottom right
                 //2  3 <-- 2 = topLeft, 3 = top right
@@ -143,7 +153,7 @@ public class GridMeshOverlay : MonoBehaviour
         int topLeft = bottomLeft + gridWidth + 1;
         int topRight = topLeft + 1;
 
-        //Update the colours array
+        //Update the colours array for this cell
         colors[bottomLeft] = color;
         colors[bottomRight] = color;
         colors[topLeft] = color;

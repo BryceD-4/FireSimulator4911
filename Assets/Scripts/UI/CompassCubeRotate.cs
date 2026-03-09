@@ -1,3 +1,11 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This program is applied to the cube which rotates above the map for navigation. 
+It rotates the cube and keeps it centered in the same location for the camera. 
+
+*/
 using UnityEngine;
 
 public class CompassCubeRotate : MonoBehaviour
@@ -13,7 +21,7 @@ public class CompassCubeRotate : MonoBehaviour
     // Update is called once per frame, after all other updates are called
      void LateUpdate()
     {
-        //Get the cube to always be oriented with the camera
+        //KEEPS CUBE STEADY IN CAMERA: Get the cube to always be oriented with the camera
         //The offset places the cube in the same spot on the screen at all times
         //REF: https://stackoverflow.com/questions/75984333/bring-gameobject-to-the-position-of-camera#:~:text=To%20achieve%20this%20you%20could,3001%209
         transform.position = cameraTransform.position + 
@@ -25,7 +33,8 @@ public class CompassCubeRotate : MonoBehaviour
         //This gets the y-angle of the terrain object
         float terrainYAngle = terrainCenter.eulerAngles.y;
 
-        //.euler(x, y, z) -->xyz are degrees
+        //ROTATES CUBE WITH TERRAIN: 
+        // .euler(x, y, z) -->xyz are degrees
         //Set the objects rotation to be the same of that of the terrain Y rotation
         //Negative as the rotation is opposite to that of the camera.
         //REF: https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Quaternion.Euler.html

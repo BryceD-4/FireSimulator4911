@@ -1,15 +1,30 @@
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
+
+This program handles the creation of the 2D backend grid which is populated with
+GridCell objects. 
+It also sets the elevation value for each gridcell based on the Terrain object
+and sets the fuel value for the cells. 
+*/
+
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    //100 was chosen to reduce CPU load, as 150 and 200 were very slow
+    //Holds the actual terrain width and length from Unity Terrain obj
     private float terrainWidth, terrainLength;
+    //The L and W of 2D grid
     private int gridWidth, gridLength;
+    //Calculated from terrain and grid dimensions
     private float cellSize;
 
+    //This is the 2D backend grid
     private GridCell [,] mapGrid;
 
-    private GameObject[,] gridVisuals;
+    //For debugging
+    //This was used for early iterations
+    // private GameObject[,] gridVisuals;
 
     public void InitializeGrid(int gridW, int gridL)
     {
@@ -28,7 +43,9 @@ public class GridManager : MonoBehaviour
 
         //initialize the grids
         mapGrid = new GridCell[gridWidth, gridLength];
-        gridVisuals = new GameObject[gridWidth, gridLength];
+
+        //used for debugging
+        // gridVisuals = new GameObject[gridWidth, gridLength];
 
         //Populate our game grid with gridcells
         for(int x=0; x<gridWidth; x++)
@@ -46,8 +63,9 @@ public class GridManager : MonoBehaviour
         //Initialize the grid cell itself
         mapGrid[x,z] = nextCell;
 
+        //Used for debugging
         //This is for the visual above the cell
-        gridVisuals[x,z] = new GameObject();
+        // gridVisuals[x,z] = new GameObject();
 
         //creates a 3D vector
         //Vector3(float x, float y, float z)
@@ -94,8 +112,9 @@ public class GridManager : MonoBehaviour
         return gridLength;
     }
 
-    public GameObject GetGridVisualCell(int x, int z)
-    {
-        return gridVisuals[x,z];
-    }
+    // For debugging
+    // public GameObject GetGridVisualCell(int x, int z)
+    // {
+    //     return gridVisuals[x,z];
+    // }
 }

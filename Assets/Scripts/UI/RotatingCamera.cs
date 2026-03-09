@@ -1,19 +1,30 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+/**
+Forest Fire Simulator - Unity
+Bryce Dixon T00054766 Comp 4911 Capstone March 2026
 
+This program handles the user input to allow the terrain to rotate within the camera.
+Code was adapted from the following:
+REFERENCES:
 //Rotating camera about a space
 //REF: https://www.youtube.com/watch?v=4Jq5w5wlfsk
 
 //Modern input system modifications:
 //https://www.youtube.com/watch?v=cSkOx35Khlw&t=2s
+*/
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+
 public class RotatingCamera : MonoBehaviour
 {
     //target = the item we want to rotate around = center of the  terrain
     public Transform target;
     //We preset how fast the rotation occurs
     public float rotationSpeed = 60f;
+    //Handles directional input
     public float rotationDirection = 0f;
 
+    //Called once per frame
     void Update()
     {
         //Modified to the more modern version of control
@@ -23,6 +34,7 @@ public class RotatingCamera : MonoBehaviour
 
     private void ReadInput()
     {
+       //Using modern input to get the keyboard object in use
        //REF: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Keyboard.html
         var keyboardObj = Keyboard.current;
 
