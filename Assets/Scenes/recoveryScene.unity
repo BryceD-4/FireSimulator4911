@@ -9939,39 +9939,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: NW
-      objectReference: {fileID: 0}
-    - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[1].m_Text
       value: N
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
       value: NE
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
       value: E
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[4].m_Text
+      propertyPath: m_Options.m_Options.Array.data[3].m_Text
       value: SE
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[5].m_Text
+      propertyPath: m_Options.m_Options.Array.data[4].m_Text
       value: S
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[6].m_Text
+      propertyPath: m_Options.m_Options.Array.data[5].m_Text
       value: SW
       objectReference: {fileID: 0}
     - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
-      propertyPath: m_Options.m_Options.Array.data[7].m_Text
+      propertyPath: m_Options.m_Options.Array.data[6].m_Text
       value: W
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749228538634454395, guid: 23142e0238099450e91f509523f94fe1, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[7].m_Text
+      value: NW
       objectReference: {fileID: 0}
     - target: {fileID: 2044825838542005312, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_text
-      value: NW
+      value: N
       objectReference: {fileID: 0}
     - target: {fileID: 2138106616079466214, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_Name

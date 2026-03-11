@@ -26,7 +26,7 @@ public class IgnitionProbabilityGenerator
     private float humidityWeight = 0.30f;
 
     //These factors are the same for all cells
-    private float temperatureFactor, humidityFactor;
+    public float temperatureFactor, humidityFactor;
 
     //As the probability value is between 0 and the max fuel amount, using inverseLerp to get this between 0 and 1
     //a value of 2 was chosen simply based on review of the values from the map.
@@ -134,7 +134,7 @@ public class IgnitionProbabilityGenerator
     }
 
     //Fuel --> linear
-    private float CalculateFuelFactor(GridCell neighbour)
+    public float CalculateFuelFactor(GridCell neighbour)
     {
         //Get the fuel factor from this cell
         float fuelValue = neighbour.fuelLoad;
@@ -147,14 +147,14 @@ public class IgnitionProbabilityGenerator
     }
 
     //Temp --> exponential (squared)
-    private float CalculateTemperatureFactor()
+    public float CalculateTemperatureFactor()
     {
         float temperatureVal = rawUserValues.temperature/rawUserValues.maxTemperature;
         return temperatureVal*temperatureVal;
     }
 
     //Humidity --> exponential 
-    private float CalculateHumidityFactor()
+    public float CalculateHumidityFactor()
     {
         //In formula above, humidity is added as a 1- multiplier, meaning we just 
         //return the value ratio received. 
@@ -163,7 +163,7 @@ public class IgnitionProbabilityGenerator
     }
 
     //Wind --> exponential
-    private float CalculateWindFactor(int mainX, int mainZ, int neighbourX, int neighbourZ)
+    public float CalculateWindFactor(int mainX, int mainZ, int neighbourX, int neighbourZ)
     {
         //WIND SPEED
         //Need to map the wind speed on a range of 0-60
@@ -214,7 +214,7 @@ public class IgnitionProbabilityGenerator
     }
 
     //SLOPE --> exponential
-    private float CalculateSlopeFactor(GridCell mainCell, GridCell neighbour)
+    public float CalculateSlopeFactor(GridCell mainCell, GridCell neighbour)
     {
         //Look at elevation between neighbour and main
         //If increases, then higher slope factor
@@ -237,7 +237,6 @@ public class IgnitionProbabilityGenerator
         //arc tan is in radians, not degrees: https://www.geeksforgeeks.org/maths/arctan/
         //Convert to degrees --> https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Mathf.Rad2Deg.html
         float slopeAngleDeg = slopeAngleRad*Mathf.Rad2Deg;
-
 
         float slopeFactor = 0f;
         if(slopeAngleDeg > 0f)
