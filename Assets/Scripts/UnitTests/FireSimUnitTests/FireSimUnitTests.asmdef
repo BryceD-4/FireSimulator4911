@@ -1,0 +1,12 @@
+{
+    "name": "FireSimUnitTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ]
+}
