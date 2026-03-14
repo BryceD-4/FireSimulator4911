@@ -13,6 +13,9 @@ using System.Collections.Generic;
 
 public class BurningCellManager : MonoBehaviour
 {
+    //This is used to indicate the number of cells burnt to indicate rate of spread. 
+    int totalCellsBurntCounter = 0;
+
     //Used hashset as removal performance is better than list
     public HashSet<GridCell> burningCells = new();
 
@@ -182,6 +185,8 @@ public class BurningCellManager : MonoBehaviour
         
         //Set the colour to a dark burnt colour 
         gridMeshOverlay.SetCellColour(x,z, new Color(0.02f, 0.02f, 0.02f, 1.0f));
+       
+        Debug.Log("Total Cells Burnt = "+ ++totalCellsBurntCounter);
 
     }
     
