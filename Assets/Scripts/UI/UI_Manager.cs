@@ -8,6 +8,7 @@ This program initializes these items and disables them once simulation begins.
 
 */
 using UnityEngine;
+using UnityEngine.SceneManagement; //required for reset button (REF: REF: https://www.youtube.com/watch?v=TVSLCZWYL_E)
 using TMPro; //Keep, needed for text
 
 public class UI_Manager : MonoBehaviour
@@ -27,6 +28,7 @@ public class UI_Manager : MonoBehaviour
     public TMP_Dropdown windDirectionDropDown;
     //Class from: https://docs.unity3d.com/2018.2/Documentation/ScriptReference/UI.Button.html
     public UnityEngine.UI.Button startSimButton;
+    public UnityEngine.UI.Button resetSimButton;
 
     //Used to indicate when user values have been received
     private bool simulatorStarted = false;
@@ -77,6 +79,13 @@ public class UI_Manager : MonoBehaviour
             burnCellManager.igniteProbGen.SetUserInput(userInputData);
             //This triggers start of the update loop
             simulatorStarted = true;
+       });
+        //When reset is pressed, entire scene is reloaded
+       resetSimButton.onClick.AddListener(() =>
+       {
+        //Resetting the entire scene using reset button
+        //REF: https://www.youtube.com/watch?v=TVSLCZWYL_E
+          SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
        });
     }
 
