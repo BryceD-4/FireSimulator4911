@@ -5,6 +5,10 @@ Bryce Dixon T00054766 Comp 4911 Capstone March 2026
 This program is the unit tests for testing the "IgnitionProbabilityGenerator" class
 to ensure the probabilities are being calculated correctly. 
 
+References used:
+1. using test runner:https://docs.unity3d.com/6000.0/Documentation/Manual/testing-editortestsrunner.html
+2. Structuring unit tests in unity: https://docs.unity.com/en-us/cloud-code/modules/how-to-guides/unit-testing-create
+
 */
 using System.Collections;
 using NUnit.Framework;
@@ -162,7 +166,7 @@ public class IgnitionProbabilityTests
     }
 
     [Test]
-    public void TestDiagonalCalculateSlopeFactor1()
+    public void TestDiagonalCalculateSlopeFactor()
     {
         //Get the probability factor
         float slopeFactor = probabilityGenerator.CalculateSlopeFactor(main10, neighbour01);
