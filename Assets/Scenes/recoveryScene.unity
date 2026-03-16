@@ -10326,6 +10326,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 809267664}
     m_Modifications:
+    - target: {fileID: 229281264495947012, guid: 23142e0238099450e91f509523f94fe1, type: 3}
+      propertyPath: m_text
+      value: Humidity (%)
+      objectReference: {fileID: 0}
     - target: {fileID: 412041076597573227, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -10377,6 +10381,10 @@ PrefabInstance:
     - target: {fileID: 2044825838542005312, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_text
       value: N
+      objectReference: {fileID: 0}
+    - target: {fileID: 2048382174285346007, guid: 23142e0238099450e91f509523f94fe1, type: 3}
+      propertyPath: m_text
+      value: Temperature (C)
       objectReference: {fileID: 0}
     - target: {fileID: 2138106616079466214, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_Name
@@ -10553,6 +10561,10 @@ PrefabInstance:
     - target: {fileID: 7817417989353090778, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8565091545247032784, guid: 23142e0238099450e91f509523f94fe1, type: 3}
+      propertyPath: m_text
+      value: Wind Speed (km/h)
       objectReference: {fileID: 0}
     - target: {fileID: 8969032308939084069, guid: 23142e0238099450e91f509523f94fe1, type: 3}
       propertyPath: m_fontSize
