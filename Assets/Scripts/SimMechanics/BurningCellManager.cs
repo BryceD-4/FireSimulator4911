@@ -14,7 +14,7 @@ using System.Collections.Generic;
 public class BurningCellManager : MonoBehaviour
 {
     //This is used to indicate the number of cells burnt to indicate rate of spread. 
-    int totalCellsBurntCounter = 0;
+    float totalCellsBurntCounter = 0;
 
     //Used hashset as removal performance is better than list
     public HashSet<GridCell> burningCells = new();
@@ -37,11 +37,16 @@ public class BurningCellManager : MonoBehaviour
     //how often neighbouring cells are checked for ignition
     private float neighbourIgnitionTimer;
 
+    //This is to store cellsize to avoid continuous method calls
+    private float cellSize;
+
     //Called by FireSimMain
     public void InitializeManager()
     {
         //Create a singular probability generator for use
         igniteProbGen = new IgnitionProbabilityGenerator(gridManager.GetCellSize());
+        //GEt the cell size for fire size calculations
+        cellSize = gridManager.GetCellSize();
 
         neighbourIgnitionTimer = 0;
     }
@@ -185,9 +190,17 @@ public class BurningCellManager : MonoBehaviour
         
         //Set the colour to a dark burnt colour 
         gridMeshOverlay.SetCellColour(x,z, new Color(0.02f, 0.02f, 0.02f, 1.0f));
-       
-        Debug.Log("Total Cells Burnt = "+ ++totalCellsBurntCounter);
+        
+        totalCellsBurntCounter++;
+        
+        // Debug.Log("Total Cells Burnt = "+ ++totalCellsBurntCounter);
 
+    }
+
+    public int GetMetersBurnt()
+    {
+        int metersBurnt = (int)(totalCellsBurntCounter * cellSize);
+        return metersBurnt;
     }
     
 }//END CLASS

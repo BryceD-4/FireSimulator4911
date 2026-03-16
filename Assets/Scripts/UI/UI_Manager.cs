@@ -38,6 +38,8 @@ public class UI_Manager : MonoBehaviour
     //needed to pass user input from UI to SimEngine
     public BurningCellManager burnCellManager;
 
+    //Added to show size scale (size of fire in real time)
+    public TextMeshProUGUI fireSizeDisplay;
 
     public void InitializeUIManager()
     {
@@ -112,5 +114,22 @@ public class UI_Manager : MonoBehaviour
         humiditySlider.interactable = false;
         windDirectionDropDown.interactable = false;
         startSimButton.interactable = false;
+    }
+
+    public void DisplayNumCellsBurnt()
+    {
+        //Get the number of burnt cells in meters
+        int sizeMeters = burnCellManager.GetMetersBurnt();
+        //meters to hectares = /1000 to get kms, *100 to get hectares
+        //Hectares is terminology BC fire is most familiar with
+        int fireSizeHectares = sizeMeters/10;
+        //Decimal places were getting messy, so altered the output displayed
+        if (fireSizeHectares == 0)
+        {
+            fireSizeDisplay.text = "< 1";
+        } else {
+            //Display this to the users output box
+            fireSizeDisplay.text = fireSizeHectares.ToString();
+        }
     }
 }
