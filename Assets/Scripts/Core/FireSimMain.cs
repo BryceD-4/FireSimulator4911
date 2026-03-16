@@ -21,6 +21,10 @@ public class FireSimMain : MonoBehaviour
     //referencing the grid from this central value. This is the only spot it
     //needs to be changed. 
     private int gridSize = 100;
+
+    //This is used to limit how fast the output is sent to the screen
+    //for fire size updates
+    float outputCounter = 0f;
     
     //Initialize everything that needs to be - called once
     void Start()
@@ -47,6 +51,15 @@ public class FireSimMain : MonoBehaviour
             gridInteractor.UpdateInteractor();
             //This iterates through the burning cells and extinguishes them/ ignites their neighbours as needed.
             burningCellManager.UpdateBurningCells();
+
+            //Limit the speed of the output to every 1 second
+            outputCounter += Time.deltaTime;
+            if(outputCounter > 1.0f){
+                //This was added to demonstrate the number of burning cells
+                //and give a rough size estimate of fire size for the user.
+                uI_Manager.DisplayNumCellsBurnt();
+                outputCounter = 0f;
+            }
         }
         
 
