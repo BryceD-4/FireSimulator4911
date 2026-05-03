@@ -2,6 +2,9 @@
 
 A Unity-based simulation that models forest fire spread across a grid terrain using probabilistic ignition influenced by wind, fuel, temperature, humidity, and slope parameters.
 
+## Under Construction:
+Currently redesigning the original C# backend modules using FastAPI/Python. Updates will be pushed soon.
+
 ## Features:
 
 - Grid-based fire propagation model
