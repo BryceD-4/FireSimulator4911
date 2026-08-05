@@ -5214,6 +5214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BurningCellManager
   gridManager: {fileID: 1259929393}
   gridMeshOverlay: {fileID: 405595367}
+  tickInterval: 0.1
 --- !u!1001 &739934445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5963,9 +5964,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1000, y: 800}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0.504
+  m_MatchWidthOrHeight: 0.09
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

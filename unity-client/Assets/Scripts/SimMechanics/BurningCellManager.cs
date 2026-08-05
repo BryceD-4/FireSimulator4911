@@ -40,6 +40,10 @@ public class BurningCellManager : MonoBehaviour
     //This is to store cellsize to avoid continuous method calls
     private float cellSize;
 
+    // Timing for the simualtion, 0.1 = 10 ticks per second
+    public float tickInterval = 0.1f;
+    private float tickTimer = 0f;
+
     //Called by FireSimMain
     public void InitializeManager()
     {
@@ -48,7 +52,8 @@ public class BurningCellManager : MonoBehaviour
         //GEt the cell size for fire size calculations
         cellSize = gridManager.GetCellSize();
 
-        neighbourIgnitionTimer = 0;
+        // neighbourIgnitionTimer = 0;
+        tickTimer = 0f;
     }
 
     //Loops through all burning cells, checks their neighbours for ingition probability. 
@@ -56,7 +61,19 @@ public class BurningCellManager : MonoBehaviour
     public void UpdateBurningCells()
     {
         //Increment the time once per frame
-        neighbourIgnitionTimer++;
+        // neighbourIgnitionTimer++;
+
+        // Accumulate real world time passed since last frame
+        tickTimer += Time.deltaTime;
+        // Process simualtion steps whenever enough time has passed
+        while(tickTimer >= tickInterval)
+        {
+            ExecuteSimulationTick();
+            tickTimer -= tickInterval;
+        }
+    }
+    private void ExecuteSimulationTick() 
+    {
         
         //Need to keep a list of cells to ignite, or else creates a rippling effect
         //where the cell you just ignited causes this to run again.
@@ -70,13 +87,15 @@ public class BurningCellManager : MonoBehaviour
         {
             //Added to limit how often neighbouring cells are checked
             //as rate of spread was simply too fast at all levels.
-            if(neighbourIgnitionTimer %8 == 0){
-                //Get its neighbours probability of igniting
-                //This returns an appended list of neighbours to ignite
-                cellsToIgnite = IgniteNeighboursIfAble(cellsToIgnite, cell.GetCellX(), cell.GetCellZ());
-            }
+            // if(neighbourIgnitionTimer %8 == 0){
+
+            //Get its neighbours probability of igniting
+            //This returns an appended list of neighbours to ignite
+            cellsToIgnite = IgniteNeighboursIfAble(cellsToIgnite, cell.GetCellX(), cell.GetCellZ());
+        
+            // }
             //Check if this cell has burned out
-            cell.burnTimer += Time.deltaTime;
+            cell.burnTimer += tickInterval;
             if(cell.burnTimer >= cell.maxBurnDuration)
             {
                 //EXTINGUISH THE CELL if it has been bruning longer than the burn duration
@@ -149,8 +168,7 @@ public class BurningCellManager : MonoBehaviour
                 //a random value produces the cutoff for the ignition of cells
                 //using a threshhold worked but produced very structured burns, this adds more 
                 //variety and looks more natural. 
-                //Added x2 to slow rate of spread
-                if((nextRand * 2) < ignitionProbability)
+                if(nextRand < ignitionProbability)
                 {
                     //If our probability is higher than the random value
                     //Ignite this cell
