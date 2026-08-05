@@ -38,3 +38,12 @@ Assets/
         |- UI/		          *All user interaction management
         |- UnitTests/	      *unit tests, run through "Test Runner"
 ```
+
+## License:
+Copyright © 2026 Bryce Dixon
+
+All rights reserved.
+
+This repository is provided for viewing only.
+
+No copying, redistribution, modification, commercial use, or reuse of any portion of this project is permitted without written permission.
